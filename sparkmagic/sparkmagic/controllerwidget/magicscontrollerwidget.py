@@ -3,6 +3,7 @@
 from sparkmagic.controllerwidget.abstractmenuwidget import AbstractMenuWidget
 from sparkmagic.controllerwidget.addendpointwidget import AddEndpointWidget
 from sparkmagic.controllerwidget.manageendpointwidget import ManageEndpointWidget
+from sparkmagic.controllerwidget.attachsessionwidget import AttachSessionWidget
 from sparkmagic.controllerwidget.managesessionwidget import ManageSessionWidget
 from sparkmagic.controllerwidget.createsessionwidget import CreateSessionWidget
 from sparkmagic.livyclientlib.endpoint import Endpoint
@@ -51,7 +52,8 @@ class MagicsControllerWidget(AbstractMenuWidget):
                 description="Endpoint:",
                 options=self.endpoints
         )
-
+        self.attach_session = AttachSessionWidget(self.spark_controller, self.ipywidget_factory, self.ipython_display, self.endpoints,
+                                                  self._refresh)
         self.manage_session = ManageSessionWidget(self.spark_controller, self.ipywidget_factory, self.ipython_display,
                                                   self._refresh)
         self.create_session = CreateSessionWidget(self.spark_controller, self.ipywidget_factory, self.ipython_display,
@@ -61,12 +63,14 @@ class MagicsControllerWidget(AbstractMenuWidget):
         self.manage_endpoint = ManageEndpointWidget(self.spark_controller, self.ipywidget_factory, self.ipython_display,
                                                     self.endpoints, self._refresh)
 
-        self.tabs = self.ipywidget_factory.get_tab(children=[self.manage_session, self.create_session,
+        self.tabs = self.ipywidget_factory.get_tab(children=[self.attach_session,self.create_session,self.manage_session, 
                                                              self.add_endpoint, self.manage_endpoint])
-        self.tabs.set_title(0, "Manage Sessions")
-        self.tabs.set_title(1, "Create Session")
-        self.tabs.set_title(2, "Add Endpoint")
-        self.tabs.set_title(3, "Manage Endpoints")
+
+        self.tabs.set_title(0, "Attach exist Session")
+        self.tabs.set_title(1, "Create new Session")
+        self.tabs.set_title(2, "Delete my Session")
+        self.tabs.set_title(3, "Add Endpoint")
+        self.tabs.set_title(4, "Manage Endpoints")
 
         self.children = [self.tabs]
 
