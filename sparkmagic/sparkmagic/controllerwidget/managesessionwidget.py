@@ -20,20 +20,20 @@ class ManageSessionWidget(AbstractMenuWidget):
 
     def get_existing_session_widgets(self):
         session_widgets = []
-        session_widgets.append(self.ipywidget_factory.get_html(value="<br/>", width="600px"))
+        session_widgets.append(self.ipywidget_factory.get_html(value="<br>", width="600px"))
 
         client_dict = self.spark_controller.get_managed_clients()
         if len(client_dict) > 0:
             # Header
             header = self.get_session_widget("Name", "Id", "Kind", "State", False)
             session_widgets.append(header)
-            session_widgets.append(self.ipywidget_factory.get_html(value="<hr/>", width="600px"))
+            session_widgets.append(self.ipywidget_factory.get_html(value="<br>", width="600px"))
 
             # Sessions
             for name, session in client_dict.items():
                 session_widgets.append(self.get_session_widget(name, session.id, session.kind, session.status))
 
-            session_widgets.append(self.ipywidget_factory.get_html(value="<br/>", width="600px"))
+            session_widgets.append(self.ipywidget_factory.get_html(value="<br>", width="600px"))
         else:
             session_widgets.append(self.ipywidget_factory.get_html(value="No sessions yet.", width="600px"))
 
