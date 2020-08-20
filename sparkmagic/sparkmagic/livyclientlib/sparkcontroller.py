@@ -61,6 +61,11 @@ class SparkController(object):
             s.refresh_status_and_info()
         return session_list
 
+    def get_all_raw_sessions_endpoint(self, endpoint):
+        http_client = self._http_client(endpoint)
+        sessions = http_client.get_sessions()[u"sessions"]
+        return sessions
+        
     def attach_session_by_id(self, endpoint,session_id):
         sessions = self.get_all_sessions_endpoint(endpoint)
         for s in sessions:
@@ -73,6 +78,11 @@ class SparkController(object):
         sessions = self.get_all_sessions_endpoint(endpoint)
         return [str(s) for s in sessions]
 
+    def get_all_sessions_endpoint_info2(self, endpoint):
+        sessions = self.get_all_raw_sessions_endpoint(endpoint)
+        return [str(s) for s in sessions]
+
+        
     def cleanup(self):
         self.session_manager.clean_up_all()
         self.attached_session = None
@@ -100,12 +110,8 @@ class SparkController(object):
             session.delete()
 
     def add_session(self, name, endpoint, skip_if_exists, properties):
-        if skip_if_exists and (name in self.session_manager.get_sessions_list()):
-            self.logger.debug(u"Skipping {} because it already exists in list of sessions.".format(name))
-            return
         http_client = self._http_client(endpoint)
         session = self._livy_session(http_client, properties, self.ipython_display)
-        self.session_manager.add_session(name, session)
         self.attached_session = session
         session.start()
 
