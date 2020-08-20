@@ -39,6 +39,9 @@ class SparkController(object):
         session_to_use = self.get_session_by_name_or_default(client_name)
         return command.execute(session_to_use)
 
+    def run_command2(self, command, session):
+        return command.execute(session)
+
     def run_sqlquery(self, sqlquery, client_name=None):
         session_to_use = self.get_session_by_name_or_default(client_name)
         return sqlquery.execute(session_to_use)
@@ -89,6 +92,11 @@ class SparkController(object):
         session = self._livy_session(http_client, properties, self.ipython_display)
         self.session_manager.add_session(name, session)
         session.start()
+
+    def tmp_session(self, endpoint, properties,session_id):
+        http_client = self._http_client(endpoint)
+        session = self._livy_session(http_client, properties, self.ipython_display,session_id)
+        return session
 
     def get_session_id_for_client(self, name):
         return self.session_manager.get_session_id_for_client(name)
